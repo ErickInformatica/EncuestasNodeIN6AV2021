@@ -42,7 +42,51 @@ function comentarEncuesta(req, res) {
         })
 }
 
+function editarComentario(req, res) {
+    var encuestaId = req.params.idEncuesta;
+    var comentarioId = req.params.idComentario;
+    var params = req.body;
+    var datosPorActualizar = {}; 
+  
+    if(params.textoComentario) datosPorActualizar['listaComentarios.$.textoComentario'] = params.textoComentario;    
+
+    // {_id: "asdfadsfa", textoComentario: "Hola esto es un ejemplo", idUsuario: "adfsasfasghklvb"}
+    Encuesta.findOneAndUpdate( { _id: encuestaId, "listaComentarios._id": comentarioId }, datosPorActualizar, {new:true}, 
+    (err, encuestaActualizada)=>{
+        if(err) return res.status(500).send({ mensaje: 'Error en la peticion del Comentario' });
+        if(!encuestaActualizada) return res.status(500).send({mensaje: 'Error al editar el comentario'});
+
+        return res.status(200).send({ encuestaActualizada });
+    })
+}
+
+function obtenerComentario(req, res) {
+    var comentarioId = req.params.idComentario;
+
+    Encuesta.findOne({ "listaComentarios._id": comentarioId }, { "listaComentarios.$": 1, tituloEncuesta: 1, descripcionEncuesta: 1 } ,(err, comentarioEncontrado)=>{
+        if(err) return res.status(500).send({ mensaje: 'Error en la peticion de Comentario'});
+        if(!comentarioEncontrado) return res.status(500).send({mensaje: 'Error al obtener le Comentario' });
+
+        return res.status(200).send({ comentarioEncontrado });
+    })
+}
+
+function eliminarComentario(req, res) {
+    var comentarioId = req.params.idComentario;
+
+    Encuesta.findOneAndUpdate({ "listaComentarios._id": comentarioId }, { $pull: { listaComentarios: { _id: comentarioId } } }, {new: true},
+    (err, encuestaActualizada)=>{
+        if(err) return res.status(500).send({ mensaje: 'Error en la peticion de comentario' });
+        if(!encuestaActualizada) return res.status(500).send({ mensaje: 'Error al eliminar el Comentario' });
+
+        return res.status(200).send({ encuestaActualizada })
+    })
+}
+
 module.exports = {
     agregarEncuestas,
-    comentarEncuesta
+    comentarEncuesta,
+    editarComentario,
+    obtenerComentario,
+    eliminarComentario
 }
