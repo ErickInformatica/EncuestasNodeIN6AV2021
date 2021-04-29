@@ -35,7 +35,7 @@ function registrar(req, res) {
             if (err) return res.status(500).send({ mensaje: 'Error en la peticion de Usuarios' });
 
             if (usuariosEncontrados && usuariosEncontrados.length >= 1) {
-                return res.status(500).send({ mensaje: 'El usuario ya existe' });
+                return res.status(500).send({ mensaje: 'El usuario ya se encuentra utilizado' });
             } else {
                 bcrypt.hash(params.password, null, null, (err, passwordEncriptada) => {
                     usuarioModel.password = passwordEncriptada;
