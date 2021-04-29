@@ -139,11 +139,32 @@ function editarUsuario(req, res) {
   
 }
 
+function editarUsuarioAdmin(req, res) {
+    var idUsuario = req.params.id;
+    var params = req.body;
+
+    // BORRAR LA PROPIEDAD DE PASSWORD EN EL BODY 
+    delete params.password;
+
+    if(req.user.rol != 'ROL_ADMIN'){
+        return res.status(500).send({mensaje: 'Solo el administrador puede editar usuarios.'})
+    }
+    
+    Usuario.findByIdAndUpdate(idUsuario, params, { new: true }, (err, usuarioActualizado) => {
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!usuarioActualizado) return res.status(500).send({ mensaje: 'No se a podido editar al Usuario' });
+
+        return res.status(200).send({ usuarioActualizado })
+    })
+  
+}
+
 module.exports = {
     ejemplo,
     registrar,
     obtenerUsuarios,
     obtenerUsuarioID,
     login,
-    editarUsuario
+    editarUsuario,
+    editarUsuarioAdmin
 }
