@@ -13,5 +13,6 @@ app.put('/comentarEncuesta/:idEncuesta', md_autorizacion.ensureAuth, encuestaCon
 app.put('/editarComentario/:idEncuesta/:idComentario', md_autorizacion.ensureAuth ,encuestaControlador.editarComentario);
 app.get('/obtenerComentario/:idComentario', md_autorizacion.ensureAuth, encuestaControlador.obtenerComentario);
 app.put('/eliminarComentario/:idComentario', md_autorizacion.ensureAuth, encuestaControlador.eliminarComentario);
+app.get('/obtenerEncuestas', md_autorizacion.ensureAuth, encuestaControlador.obtenerEncuestas);
 
 module.exports = app;

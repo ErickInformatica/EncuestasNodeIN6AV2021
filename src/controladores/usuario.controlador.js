@@ -159,6 +159,21 @@ function editarUsuarioAdmin(req, res) {
   
 }
 
+function eliminarUsuarioAdmin(req, res) {
+    var idUsuario = req.params.idUsuario;
+
+    if(req.user.rol != "ROL_ADMIN"){
+        return res.status(500).send({ mensaje: 'Solo el administrador puede eliminar al Usuario' });
+    }
+
+    Usuario.findByIdAndDelete(idUsuario, ((err, usuarioEliminado)=>{
+        if(err) return res.status(500).send({ mensaje: 'Error en la peticion de Eliminar usuario' });
+        if(!usuarioEliminado) return res.status(500).send({ mensaje: 'Error al eliminar el Usuario'});
+
+        return res.status(200).send({ usuarioEliminado })
+    }))
+}
+
 module.exports = {
     ejemplo,
     registrar,
@@ -166,5 +181,6 @@ module.exports = {
     obtenerUsuarioID,
     login,
     editarUsuario,
-    editarUsuarioAdmin
+    editarUsuarioAdmin,
+    eliminarUsuarioAdmin
 }

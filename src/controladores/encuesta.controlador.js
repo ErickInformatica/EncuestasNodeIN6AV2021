@@ -2,6 +2,15 @@
 
 var Encuesta = require('../modelos/encuestas.model');
 
+function obtenerEncuestas(req, res) {
+    Encuesta.find().populate('usuarioEncuesta', 'email username imagen').exec((err, encuestasEncontradas) => {
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion de obtener Encuestas' });
+        if(!encuestasEncontradas) return res.status(500).send({ mensaje: 'Error al obtener las Encuestas' });
+        return res.status(200).send({ encuestasEncontradas })
+    })
+}
+
+
 function agregarEncuestas(req,res) {
    var encuestaModel = new Encuesta();
    var params = req.body; 
@@ -88,5 +97,6 @@ module.exports = {
     comentarEncuesta,
     editarComentario,
     obtenerComentario,
-    eliminarComentario
+    eliminarComentario,
+    obtenerEncuestas
 }

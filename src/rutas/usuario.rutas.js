@@ -16,5 +16,6 @@ api.get('/obtenerUsuarioId/:idUsuario', usuarioControlador.obtenerUsuarioID);
 api.post('/login', usuarioControlador.login);
 api.put('/editarUsuario/:id', md_autorizacion.ensureAuth, usuarioControlador.editarUsuario);
 api.put('/editarUsuarioAdmin/:id', md_autorizacion.ensureAuth, usuarioControlador.editarUsuarioAdmin);
+api.delete('/eliminarUsuarioAdmin/:idUsuario', md_autorizacion.ensureAuth, usuarioControlador.eliminarUsuarioAdmin);
 
 module.exports = api;
