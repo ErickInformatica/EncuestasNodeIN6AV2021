@@ -76,10 +76,17 @@ function eliminarCiudadyDepartamentos(req, res){
     })
 }
 
+function obtenerPruebas(req, res) {
+    Pruebas.find().exec((err, pruebasObtenidas)=>{
+        return res.status(200).send({pruebasObtenidas: pruebasObtenidas})
+    })
+}
+
 module.exports ={
     incrementarPrueba,
     agregarPruebas,
     agregarComidas,
     agregarDepartamentos,
-    eliminarCiudadyDepartamentos
+    eliminarCiudadyDepartamentos,
+    obtenerPruebas
 }
