@@ -4,7 +4,12 @@ const Schema = mongoose.Schema;
 
 var PruebasSchema = Schema({
     ciudad: String,
-    habitantes: Number
+    habitantes: Number,
+    comidaCasa: [{
+        nombreComida: String,
+        precioComida: Number
+    }],
+    totalComidaCasa: Number
 });
 
 module.exports = mongoose.model('Pruebas', PruebasSchema);
