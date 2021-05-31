@@ -1,6 +1,7 @@
 'use strict'
 
 var Pruebas = require('../modelos/pruebas.model');
+var Departamentos = require('../modelos/departamentos.model');
 
 function agregarPruebas(req, res) {
     var pruebasModel = new Pruebas();
@@ -50,8 +51,35 @@ function agregarComidas(req, res){
         })
 }
 
+function agregarDepartamentos(req, res){
+    var departamentosModel = new Departamentos();
+    var params = req.body;
+    var idCiudad = req.params.idCiudad;
+
+    if(params.nombreDepartamento){
+        departamentosModel.nombreDepartamento = params.nombreDepartamento;
+        departamentosModel.idCiudad = idCiudad;
+
+        departamentosModel.save((err, departamentoGuardado)=>{
+            return res.status(200).send({departamentoGuardado})
+        })
+    }
+}
+
+function eliminarCiudadyDepartamentos(req, res){
+    var idCiudadRuta = req.params.idCiudad;
+
+    Pruebas.findByIdAndDelete(idCiudadRuta, (err, ciudadEliminada)=>{
+        Departamentos.deleteMany({ idCiudad: idCiudadRuta }, (err, departamentoEliminados)=>{
+            return res.status(200).send({eliminados: departamentoEliminados})
+        })
+    })
+}
+
 module.exports ={
     incrementarPrueba,
     agregarPruebas,
-    agregarComidas
+    agregarComidas,
+    agregarDepartamentos,
+    eliminarCiudadyDepartamentos
 }
