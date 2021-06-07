@@ -3,6 +3,8 @@
 var Usuario = require("../modelos/usuario.model");
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require("../servicios/jwt");
+var fs = require('fs');
+var path = require('path');
 
 function ejemplo(req, res) {
     if (req.user.rol === "ROL_USUARIO") {
@@ -174,6 +176,57 @@ function eliminarUsuarioAdmin(req, res) {
     }))
 }
 
+function eliminarArchivo(res, rutaArchivo, mensaje) {
+    fs.unlink(rutaArchivo, (err)=>{
+        return res.status(500).send({ mensaje: mensaje})
+    })
+}
+
+function subirImagenUsuario(req, res) {
+    var idUsuario = req.user.sub;
+
+    if (req.files) {
+        var direccionArchivo = req.files.imagen.path;
+        console.log(direccionArchivo);
+
+        // documentos/imagenes/foto_perfil.png  →  ['documentos', 'imagenes', 'foto_perfil.png']
+        // Hola Mundo  →  ['Hola', 'Mundo']
+        var direccion_split = direccionArchivo.split('\\')
+        console.log(direccion_split);
+
+        // src\imagenes\usuarios\nombre_imagen.png ← Nombre Archivo
+        var nombre_archivo = direccion_split[3];
+        console.log(nombre_archivo);
+
+        var extension_archivo = nombre_archivo.split('.');
+        console.log(extension_archivo);
+
+        var nombre_extension = extension_archivo[1].toLowerCase();
+        console.log(nombre_extension);
+
+        if(nombre_extension === 'png' || nombre_extension === 'jpg' || nombre_extension === 'gif'){
+            Usuario.findByIdAndUpdate(idUsuario, { imagen:  nombre_archivo}, {new: true} ,(err, usuarioEncontrado)=>{
+                return res.status(200).send({usuarioEncontrado});
+            })
+        }else{
+            return eliminarArchivo(res, direccionArchivo, 'Extension, no permitida');
+        }
+    }
+}
+
+function obtenerImagen(req, res) {
+    var nombreImagen = req.params.imagen;
+    var rutaArchivo = `./src/imagenes/usuarios/${nombreImagen}`;
+
+    fs.access(rutaArchivo, (err)=>{
+        if (err) {
+            return res.status(500).send({ mensaje: 'No existe la imagen' });
+        }else{
+            return res.sendFile(path.resolve(rutaArchivo));
+        }
+    })
+}
+
 module.exports = {
     ejemplo,
     registrar,
@@ -182,5 +235,7 @@ module.exports = {
     login,
     editarUsuario,
     editarUsuarioAdmin,
-    eliminarUsuarioAdmin
+    eliminarUsuarioAdmin,
+    subirImagenUsuario,
+    obtenerImagen
 }

@@ -82,11 +82,19 @@ function obtenerPruebas(req, res) {
     })
 }
 
+function obtenerComidas(req, res) {
+    var idPruebas = req.params.id;
+    Pruebas.findById(idPruebas, { comidaCasa: 1 }, (err, comidasObtenidas)=>{
+        return res.status(200).send({ comidasObtenidas: comidasObtenidas});
+    })
+}
+
 module.exports ={
     incrementarPrueba,
     agregarPruebas,
     agregarComidas,
     agregarDepartamentos,
     eliminarCiudadyDepartamentos,
-    obtenerPruebas
+    obtenerPruebas,
+    obtenerComidas
 }

@@ -11,4 +11,5 @@ api.put('/agregarComidas/:id', pruebasControlador.agregarComidas);
 api.post('/agregarDepartamento/:idCiudad', pruebasControlador.agregarDepartamentos);
 api.delete('/eliminarCiudadyDep/:idCiudad', pruebasControlador.eliminarCiudadyDepartamentos);
 api.get('/obtenerPruebas', pruebasControlador.obtenerPruebas);
+api.get('/obtenerComidas/:id', pruebasControlador.obtenerComidas);
 module.exports = api;
